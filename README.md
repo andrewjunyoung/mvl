@@ -1,36 +1,37 @@
-# 3VL
+# MVL (many valued logic)
 
-3VL («3 valued logic») is a python package which implements different types of 3
-valued logic systems.
+MVL («many valued logic») is a python package which implements different types
+of logic systems which use more than 2 values.
 
-## What types of 3 valued logic are implemented?
-The following 3 valued logic systems are supported by 3VL:
-[None yet]
-
-The following systems are planned for future support:
+## What logic systems are implemented?
+The following 3 valued logic systems are supported by MVL:
   - Kleene
   - Priest
-  - Łukasiewicz
+
+The following systems are planned for future support:
+  - Łukasiewicz MVL
+  - Goedel MVL
+  - Bochvar 3VL
 
 ## Usage
 
-Using 3VL is designed to integrate with existing python infrastructure as much
+Using MVL is designed to integrate with existing python infrastructure as much
 as possible.
 
 ```
-  > import tvl.kleene as tvl
+  > import mvl.kleene as mvl
   
-  > if (tvl.T) print('I'm true!')
+  > if (mvl.T) print('I'm true!')
   "I'm true!"
   
-  > if (tvl.U) print('I'm true!')
+  > if (mvl.U) print('I'm true!')
   
-  > if (tvl.F) print('I'm true!')
+  > if (mvl.F) print('I'm true!')
   
-  > print(tvl.or_(tvl.F, tvl.U))
+  > print(mvl.or_(mvl.F, mvl.U))
   Unknown
 
-  > e = tvl.str_parse('? and +')
+  > e = mvl.str_parse('? and +')
   Expression('? and +')
 
   > e.eval()
