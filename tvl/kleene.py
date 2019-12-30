@@ -68,7 +68,7 @@ def _is_u(a):
     )
 
 
-def is_t(a):
+def _is_t(a):
     return (
         a == 'T'
         or a == 't'
@@ -81,29 +81,29 @@ def is_t(a):
 
 def tvl(a):
     if _is_f(a):
-        return F()
+        return F
     elif _is_u(a):
-        return U()
+        return U
     elif _is_t(a):
-        return T()
+        return T
 
-    raise ValueError('Failed to convert {} to Kleene 3VL.'.format(a))
+    raise ValueError('Failed to convert {} to 3 valued logic.'.format(a))
 
 
 def and_(a, b):
-    return min(int(a), int(b))
+    return tvl(min(int(a), int(b)))
 
 
 def or_(a, b):
-    return max(int(a), int(b))
+    return tvl(max(int(a), int(b)))
 
 
 def not_(a):
-    return - int(a)
+    return tvl(- int(a))
 
 
 def iff(a, b):
-    return int(a) * int(b)
+    return tvl(int(a) * int(b))
 
 
 def xor(a, b):
@@ -112,4 +112,9 @@ def xor(a, b):
 
 def implies(a, b):
     return or_(not_(a), b)
+
+
+F = F()
+U = U()
+T = T()
 

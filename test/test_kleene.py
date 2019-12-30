@@ -1,59 +1,45 @@
+'''
+@author: Andrew J. Young
+@description: Unit tests for kleene 3 valued logic.
+'''
+
+
 # Imports from third party packages.
 from unittest import main as unittest_main
 from unittest import TestCase
 
 # Imports from the local package.
 import tvl.kleene as tvl
-
-U = tvl.U()
-T = tvl.T()
-F = tvl.F()
+from tvl.kleene import F, U, T
 
 
-class TestLogicValue(TestCase):
-    def _test_int_eval(self, expected):
-        actual = int(self.val)
+class ThreeValuedLogicTests(TestCase):
+    def setUp(self):
+        self.vals = [F, U, T]
+        self.tvl = tvl
+
+
+    def _test_int_eval(self, val, expected):
+        actual = int(val)
         self.assertEqual(expected, actual)
 
-    def _test_bool_eval(self, expected):
-        actual = bool(self.val)
+
+    def _test_bool_eval(self, val, expected):
+        actual = bool(val)
         self.assertEqual(expected, actual)
 
 
-class TestKleeneF(TestLogicValue):
-    def setUp(self):
-        self.val = F
-
-    def test_bool_eval(self):
-        self._test_bool_eval(False)
-
     def test_int_eval(self):
-        self._test_int_eval(-1)
+        expected = {
+            str(F): -1,
+            str(U): 0,
+            str(T): 1,
+        }
+
+        for val in self.vals:
+            self._test_int_eval(val, expected[str(val)])
 
 
-class TestKleeneU(TestLogicValue):
-    def setUp(self):
-        self.val = U
-
-    def test_bool_eval(self):
-        self._test_bool_eval(False)
-
-    def test_int_eval(self):
-        self._test_int_eval(0)
-
-
-class TestKleeneT(TestLogicValue):
-    def setUp(self):
-        self.val = T
-
-    def test_bool_eval(self):
-        self._test_bool_eval(True)
-
-    def test_int_eval(self):
-        self._test_int_eval(1)
-
-
-class TestOperators(TestCase):
     def _test_binary_operator(self, op, expected_truth_table):
         actual_truth_table = [
             # Unknown  True      False
@@ -68,6 +54,7 @@ class TestOperators(TestCase):
                     actual_truth_table[i][j]
                 )
 
+
     def _test_unary_operator(self, op, expected_truth_table):
         actual_truth_table = [
             op(U), # Unknown
@@ -78,6 +65,7 @@ class TestOperators(TestCase):
         for i in range(len(expected_truth_table)):
             self.assertEqual(expected_truth_table[i], actual_truth_table[i])
 
+
     def test_and_(self):
         expected_truth_table = [
             # U  T  F
@@ -85,7 +73,8 @@ class TestOperators(TestCase):
             [ U, T, F], # T
             [ F, F, F], # F
         ]
-        self._test_binary_operator(tvl.and_, expected_truth_table)
+        self._test_binary_operator(self.tvl.and_, expected_truth_table)
+
 
     def test_or_(self):
         expected_truth_table = [
@@ -94,7 +83,8 @@ class TestOperators(TestCase):
             [ T, T, T], # T
             [ U, T, F], # F
         ]
-        self._test_binary_operator(tvl.or_, expected_truth_table)
+        self._test_binary_operator(self.tvl.or_, expected_truth_table)
+
 
     def test_xor(self):
         expected_truth_table = [
@@ -103,7 +93,8 @@ class TestOperators(TestCase):
             [ U, F, T], # T
             [ U, T, F], # F
         ]
-        self._test_binary_operator(tvl.xor, expected_truth_table)
+        self._test_binary_operator(self.tvl.xor, expected_truth_table)
+
 
     def test_iff(self):
         expected_truth_table = [
@@ -112,17 +103,16 @@ class TestOperators(TestCase):
             [ U, T, F], # T
             [ U, F, T], # F
         ]
-        self._test_binary_operator(tvl.iff, expected_truth_table)
+        self._test_binary_operator(self.tvl.iff, expected_truth_table)
 
-    #def test_implies(self):
-        # TODO: Should throw an error.
-        #expected_truth_table = [
-        #    # U  T  F
-        #    [ U, U, U], # U
-        #    [ U, T, F], # T
-        #    [ U, F, T], # F
-        #]
-        #self._test_binary_operator(tvl.iff, expected_truth_table)
+    def test_implies(self):
+        expected_truth_table = [
+            # U  T  F
+            [ U, T, U], # U
+            [ U, T, F], # T
+            [ T, T, T], # F
+        ]
+        self._test_binary_operator(self.tvl.implies, expected_truth_table)
 
     def test_not_(self):
         expected_truth_table = [
@@ -130,7 +120,19 @@ class TestOperators(TestCase):
             F, # T
             T, # F
         ]
-        self._test_unary_operator(tvl.not_, expected_truth_table)
+        self._test_unary_operator(self.tvl.not_, expected_truth_table)
+
+
+def TestKleene(ThreeValuedLogicTests):
+    def test_bool_eval(self):
+        expected = {
+            str(F): False,
+            str(U): False,
+            str(T): True,
+        }
+
+        for val in self.vals:
+            self._test_bool_eval(val, expected[str(val)])
 
 
 if __name__ == '__main__':
