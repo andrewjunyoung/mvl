@@ -9,14 +9,14 @@ from unittest import main as unittest_main
 from unittest import TestCase
 
 # Imports from the local package.
-import tvl.kleene as tvl
-from tvl.kleene import F, U, T
+import mvl.kleene as mvl
+from mvl.kleene import F, U, T
 
 
 class ThreeValuedLogicTests(TestCase):
     def setUp(self):
         self.vals = [F, U, T]
-        self.tvl = tvl
+        self.mvl = mvl
 
 
     def _test_int_eval(self, val, expected):
@@ -73,7 +73,7 @@ class ThreeValuedLogicTests(TestCase):
             [ U, T, F], # T
             [ F, F, F], # F
         ]
-        self._test_binary_operator(self.tvl.and_, expected_truth_table)
+        self._test_binary_operator(self.mvl.and_, expected_truth_table)
 
 
     def test_or_(self):
@@ -83,7 +83,7 @@ class ThreeValuedLogicTests(TestCase):
             [ T, T, T], # T
             [ U, T, F], # F
         ]
-        self._test_binary_operator(self.tvl.or_, expected_truth_table)
+        self._test_binary_operator(self.mvl.or_, expected_truth_table)
 
 
     def test_xor(self):
@@ -93,7 +93,7 @@ class ThreeValuedLogicTests(TestCase):
             [ U, F, T], # T
             [ U, T, F], # F
         ]
-        self._test_binary_operator(self.tvl.xor, expected_truth_table)
+        self._test_binary_operator(self.mvl.xor, expected_truth_table)
 
 
     def test_iff(self):
@@ -103,7 +103,7 @@ class ThreeValuedLogicTests(TestCase):
             [ U, T, F], # T
             [ U, F, T], # F
         ]
-        self._test_binary_operator(self.tvl.iff, expected_truth_table)
+        self._test_binary_operator(self.mvl.iff, expected_truth_table)
 
     def test_implies(self):
         expected_truth_table = [
@@ -112,7 +112,7 @@ class ThreeValuedLogicTests(TestCase):
             [ U, T, F], # T
             [ T, T, T], # F
         ]
-        self._test_binary_operator(self.tvl.implies, expected_truth_table)
+        self._test_binary_operator(self.mvl.implies, expected_truth_table)
 
     def test_not_(self):
         expected_truth_table = [
@@ -120,7 +120,7 @@ class ThreeValuedLogicTests(TestCase):
             F, # T
             T, # F
         ]
-        self._test_unary_operator(self.tvl.not_, expected_truth_table)
+        self._test_unary_operator(self.mvl.not_, expected_truth_table)
 
 
 def TestKleene(ThreeValuedLogicTests):

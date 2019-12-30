@@ -3,7 +3,7 @@
 @description: A base class for Priest's 3 valued logic.
 '''
 
-from tvl.kleene import *
+from mvl.kleene import *
 # We want to overwrite the definition for U, so delete the existing definition.
 del globals()['U']
 

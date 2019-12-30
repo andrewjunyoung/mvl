@@ -8,14 +8,14 @@ from unittest import main as unittest_main
 
 # Imports from the local package.
 from test.test_kleene import ThreeValuedLogicTests
-import tvl.priest as tvl
-from tvl.priest import F, U, T
+import mvl.priest as mvl
+from mvl.priest import F, U, T
 
 
 class TestPriest(ThreeValuedLogicTests):
     def setUp(self):
         self.vals = [F, U, T]
-        self.tvl = tvl
+        self.mvl = mvl
 
 
     def test_bool_eval(self):

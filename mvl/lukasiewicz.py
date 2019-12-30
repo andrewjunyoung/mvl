@@ -1,6 +1,6 @@
 '''
 @author: Andrew J. Young
-@description: A base class for implementing 3 valued logic.
+@description: A base class for Lukasiewicz's 3 valued logic.
 '''
 
 class LogicValue:
@@ -47,74 +47,57 @@ class T(LogicValue):
         return '3VL.True'
 
 
-def _is_f(a):
-    return (
-        a == 'F'
-        or a == 'f'
-        or a == '-'
-        or a == '-1'
-        or a == -1
-    )
-
-
-def _is_u(a):
-    return (
-        a == 'U'
-        or a == 'u'
-        or a == '?'
-        or a == '#'
-        or a == '0'
-        or a == 0
-    )
-
-
-def _is_t(a):
-    return (
-        a == 'T'
-        or a == 't'
-        or a == '+'
-        or a == '1'
-        or a == '+1'
-        or a == 1
-    )
-
-
-def tvl(a):
-    if _is_f(a):
-        return F
-    elif _is_u(a):
-        return U
-    elif _is_t(a):
-        return T
-
-    raise ValueError('Failed to convert {} to 3 valued logic.'.format(a))
-
-
-def and_(a, b):
-    return tvl(min(int(a), int(b)))
-
-
-def or_(a, b):
-    return tvl(max(int(a), int(b)))
+def bool_(a):
+    return a == 1
 
 
 def not_(a):
-    return tvl(- int(a))
+    return tvl(1 - a)
+
+
+def s_and(a, b):
+    """ "Strong and" operator.
+    """
+    return tvl(max(0, int(a) + int(b) - 1))
+
+
+def w_and(a, b):
+    """ "Weak and" operator.
+    |   | U | T | F |
+    | U | U | U | F |
+    | T | U | T | F |
+    | F | F | F | F |
+    """
+    return tvl(min(int(a), int(b)))
+
+
+def s_or(a, b):
+    """ "Strong or" operator, equivalent to xor.
+    |   | U | T | F |
+    | U | U | U | F |
+    | T | U | T | F |
+    | F | F | F | F |
+    """
+    return tvl(max(int(a), int(b)))
+
+
+def w_or(a, b):
+    """ "Weak or" operator, equivalent to (inclusive) "or".
+    """
+    if a == b and b == 0:
+        return T
+    return max(a, b)
 
 
 def iff(a, b):
-    return tvl(int(a) * int(b))
-
-
-def xor(a, b):
-    return not_(iff(a, b))
+    return int(a) * int(b)
 
 
 def implies(a, b):
-    return or_(not_(a), b)
+    return tvl(min(1, 1 - a + b))
 
 
-F = F()
-U = U()
 T = T()
+U = U()
+F = F()
 
