@@ -5,7 +5,7 @@ tree:
 	tree -I 'docs|bin|lib|venv|htmlcov|.coverage'
 
 tests:
-	python -m unittest discover -v
+	python3 -m unittest discover -v
 
 coverage:
 	coverage run -m unittest discover

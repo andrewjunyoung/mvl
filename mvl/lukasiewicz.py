@@ -3,101 +3,138 @@
 @description: A base class for Lukasiewicz's 3 valued logic.
 '''
 
+
+from mvl.settings import CLASS_CREATION_THRESHOLD
+
+
 class LogicValue:
     def __eq__(self, other):
-        return int(self) == int(other)
+        return float(self) == float(other)
 
     def __ne__(self, other):
-        return int(self) != int(other)
+        return not self.__eq__(other)
 
     def __nonzero__(self):
         return self.__bool__()
 
+    def __init__(self, index, n_values):
+        self.index = index
+        self.float_ = index / (n_values - 1)
+        self.n_values = n_values
 
-class F(LogicValue):
-    def __int__(self):
-        return -1
-
-    def __bool__(self):
-        return False
-
-    def __repr__(self):
-        return '3VL.False'
-
-
-class U(LogicValue):
-    def __int__(self):
-        return 0
+        self.name = None
 
     def __bool__(self):
-        return False # In Kleene's 3VL, "True" is the only truth value.
+        # This should be implemented by the inheritors of this class.
+        raise NotImplementedError()
+
+    def _repr(self, class_name):
+        if self.name:
+            return '{}.{}'.format(class_name, self.name)
+        else: # self.name is None
+            return '{}({} of {})'.format(
+                class_name,
+                self.index,
+                self.n_values,
+            )
 
     def __repr__(self):
-        return '3VL.Unknown'
+        return self._repr('LogicValue')
+
+    def __float__(self):
+        return self.float_
 
 
-class T(LogicValue):
-    def __int__(self):
-        return 1
-
+class LukasiewiczLogicValue(LogicValue):
     def __bool__(self):
-        return True
+        return float(self) == 1
 
     def __repr__(self):
-        return '3VL.True'
+        return self._repr('LukasiewiczLogicValue')
 
 
-def bool_(a):
-    return a == 1
+class PriestLogicValue(LogicValue):
+    def __bool__(self):
+        return float(self) != 0
+
+    def __repr__(self):
+        return self._repr('PriestLogicValue')
 
 
-def not_(a):
-    return tvl(1 - a)
+class LogicSystem:
+    n_values = None
+    values = []
+
+    def __init__(self, n_values, logic_value_class):
+        self.n_values = n_values
+        self.logic_value_class = logic_value_class
+
+    def gen_classes(self, i_have_read_the_ts_and_cs = False):
+        if self.n_values > CLASS_CREATION_THRESHOLD:
+            print('''
+Hello! It seems that you're trying to create a *lot* of classes
+right now!
+
+Before you do this, you should check that you really want to create
+all of these. Classes take up a lot of space in memory, and may
+affect the performance of your code and the rest of your machine.
+
+Before you do this, be sure that this is what you want to do. Better
+yet, run tests on what your computer is able to handle. If you're
+still sure that you want to create all these classes, rerun this
+function with the parameter `i_have_read_the_ts_and_cs = True`.
+
+Happy hacking!
+            ''')
+            return
+        else:
+            name = 'LogicValue'
+            self.values = [
+                self.logic_value_class(i, self.n_values)
+                for i in range(self.n_values)
+            ]
+
+    def mvl(self, f):
+        return self.values[int(f * self.n_values) - 1]
 
 
 def s_and(a, b):
-    """ "Strong and" operator.
-    """
-    return tvl(max(0, int(a) + int(b) - 1))
+    a = float(a)
+    b = float(b)
+    return max(0, a + b - 1)
 
 
 def w_and(a, b):
-    """ "Weak and" operator.
-    |   | U | T | F |
-    | U | U | U | F |
-    | T | U | T | F |
-    | F | F | F | F |
-    """
-    return tvl(min(int(a), int(b)))
+    a = float(a)
+    b = float(b)
+    return min(a, b)
 
 
 def s_or(a, b):
-    """ "Strong or" operator, equivalent to xor.
-    |   | U | T | F |
-    | U | U | U | F |
-    | T | U | T | F |
-    | F | F | F | F |
-    """
-    return tvl(max(int(a), int(b)))
+    a = float(a)
+    b = float(b)
+    return min(1, a + b)
 
 
 def w_or(a, b):
-    """ "Weak or" operator, equivalent to (inclusive) "or".
-    """
-    if a == b and b == 0:
-        return T
+    a = float(a)
+    b = float(b)
     return max(a, b)
 
 
-def iff(a, b):
-    return int(a) * int(b)
+def not_(a):
+    a = float(a)
+    return 1 - a
 
 
 def implies(a, b):
-    return tvl(min(1, 1 - a + b))
+    a = float(a)
+    b = float(b)
+    return min(1, 1 - a + b)
 
 
-T = T()
-U = U()
-F = F()
+def equivalent(a, b):
+    a = float(a)
+    b = float(b)
+    return (1 - abs(a - b))
 
