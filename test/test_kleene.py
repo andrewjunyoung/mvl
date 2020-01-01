@@ -9,18 +9,26 @@ from unittest import main as unittest_main
 from unittest import TestCase
 
 # Imports from the local package.
-import mvl.kleene as mvl
-from mvl.kleene import F, U, T
+import mvl.kleene as kleene
+import mvl.priest as priest
 
 
 class ThreeValuedLogicTests(TestCase):
-    def setUp(self):
-        self.vals = [F, U, T]
-        self.mvl = mvl
+    def _setUp(self):
+        mvl = self.mvl
 
+        self.f = mvl.f
+        self.u = mvl.u
+        self.t = mvl.t
+
+        self.vals = [self.f, self.u, self.t]
+
+    def setUp(self):
+        self.mvl = kleene
+        self._setUp()
 
     def _test_int_eval(self, val, expected):
-        actual = int(val)
+        actual = float(val)
         self.assertEqual(expected, actual)
 
 
@@ -31,9 +39,9 @@ class ThreeValuedLogicTests(TestCase):
 
     def test_int_eval(self):
         expected = {
-            str(F): -1,
-            str(U): 0,
-            str(T): 1,
+            str(self.f): 0,
+            str(self.u): 0.5,
+            str(self.t): 1,
         }
 
         for val in self.vals:
@@ -41,11 +49,15 @@ class ThreeValuedLogicTests(TestCase):
 
 
     def _test_binary_operator(self, op, expected_truth_table):
+        f = self.f
+        u = self.u
+        t = self.t
+
         actual_truth_table = [
-            # Unknown  True      False
-            [op(U, U), op(U, T), op(U, F)], # Unknown
-            [op(T, U), op(T, T), op(T, F)], # True
-            [op(F, U), op(F, T), op(F, F)], # False
+            # u        t         f
+            [op(u, u), op(u, t), op(u, f)], # u
+            [op(t, u), op(t, t), op(t, f)], # t
+            [op(f, u), op(f, t), op(f, f)], # f
         ]
 
         for i in range(len(expected_truth_table)):
@@ -57,9 +69,9 @@ class ThreeValuedLogicTests(TestCase):
 
     def _test_unary_operator(self, op, expected_truth_table):
         actual_truth_table = [
-            op(U), # Unknown
-            op(T), # True
-            op(F), # False
+            op(self.u), # u
+            op(self.t), # t
+            op(self.f), # f
         ]
 
         for i in range(len(expected_truth_table)):
@@ -67,68 +79,104 @@ class ThreeValuedLogicTests(TestCase):
 
 
     def test_and_(self):
+        f = self.f
+        u = self.u
+        t = self.t
+
         expected_truth_table = [
-            # U  T  F
-            [ U, U, F], # U
-            [ U, T, F], # T
-            [ F, F, F], # F
+            # u  t  f
+            [ u, u, f], # u
+            [ u, t, f], # t
+            [ f, f, f], # f
         ]
         self._test_binary_operator(self.mvl.and_, expected_truth_table)
 
 
     def test_or_(self):
+        f = self.f
+        u = self.u
+        t = self.t
+
         expected_truth_table = [
-            # U  T  F
-            [ U, T, U], # U
-            [ T, T, T], # T
-            [ U, T, F], # F
+            # u  t  f
+            [ u, t, u], # u
+            [ t, t, t], # t
+            [ u, t, f], # f
         ]
         self._test_binary_operator(self.mvl.or_, expected_truth_table)
 
 
     def test_xor(self):
+        f = self.f
+        u = self.u
+        t = self.t
+
         expected_truth_table = [
-            # U  T  F
-            [ U, U, U], # U
-            [ U, F, T], # T
-            [ U, T, F], # F
+            # u  t  f
+            [ u, u, u], # u
+            [ u, f, t], # t
+            [ u, t, f], # f
         ]
         self._test_binary_operator(self.mvl.xor, expected_truth_table)
 
 
     def test_iff(self):
+        f = self.f
+        u = self.u
+        t = self.t
+
         expected_truth_table = [
-            # U  T  F
-            [ U, U, U], # U
-            [ U, T, F], # T
-            [ U, F, T], # F
+            # u  t  f
+            [ u, u, u], # u
+            [ u, t, f], # t
+            [ u, f, t], # f
         ]
         self._test_binary_operator(self.mvl.iff, expected_truth_table)
 
     def test_implies(self):
+        f = self.f
+        u = self.u
+        t = self.t
+
         expected_truth_table = [
-            # U  T  F
-            [ U, T, U], # U
-            [ U, T, F], # T
-            [ T, T, T], # F
+            # u  t  f
+            [ u, t, u], # u
+            [ u, t, f], # t
+            [ t, t, t], # f
         ]
         self._test_binary_operator(self.mvl.implies, expected_truth_table)
 
     def test_not_(self):
         expected_truth_table = [
-            U, # U
-            F, # T
-            T, # F
+            self.u, # u
+            self.f, # t
+            self.t, # f
         ]
         self._test_unary_operator(self.mvl.not_, expected_truth_table)
 
 
-def TestKleene(ThreeValuedLogicTests):
+class TestKleene(ThreeValuedLogicTests):
     def test_bool_eval(self):
         expected = {
-            str(F): False,
-            str(U): False,
-            str(T): True,
+            str(self.f): False,
+            str(self.u): False,
+            str(self.t): True,
+        }
+
+        for val in self.vals:
+            self._test_bool_eval(val, expected[str(val)])
+
+
+class TestPriest(ThreeValuedLogicTests):
+    def setUp(self):
+        self.mvl = priest
+        self._setUp()
+
+    def test_bool_eval(self):
+        expected = {
+            str(self.f): False,
+            str(self.u): True,
+            str(self.t): True,
         }
 
         for val in self.vals:

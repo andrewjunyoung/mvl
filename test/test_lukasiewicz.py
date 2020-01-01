@@ -1,0 +1,99 @@
+# Imports from third party packages.
+from unittest import TestCase
+
+# Imports from the local package.
+from mvl.lukasiewicz import (
+    LogicValue,
+    LogicSystem,
+    LukasiewiczLogicValue,
+    PriestLogicValue,
+)
+
+class TestLogicValue(TestCase):
+    def _setUp(self):
+        self.index = 3
+        self.n_values = 5
+        self.float_ = self.index / (self.n_values - 1)
+        self.instance = self.class_(self.index, self.n_values)
+
+    def setUp(self):
+        self.class_ = LogicValue
+        self.class_name = 'LogicValue'
+
+        self._setUp()
+
+    def test_eq(self):
+        instance = self.instance
+        self.assertEqual(instance, self.instance)
+        self.assertEqual(instance, self.float_)
+
+    def test_ne(self):
+        instance = self.instance
+        self.assertNotEqual(instance, self.class_(self.index, self.n_values + 1))
+        self.assertNotEqual(instance, self.float_ + 1)
+
+    def test_float(self):
+        self.assertEqual(self.float_, float(self.instance))
+
+    def test_bool(self):
+        with self.assertRaises(NotImplementedError):
+            bool(self.instance)
+
+    def _test_bool(self, expected_truth_vals):
+        for i in range(3):
+            val = self.class_(i, 3)
+            self.assertEqual(expected_truth_vals[i], bool(val))
+
+    def _test_repr_without_name(self, class_name):
+        expected = '{}({} of {})'.format(class_name, self.index, self.n_values)
+        actual = str(self.instance)
+
+        self.assertEqual(expected, actual)
+
+    def _test_repr_with_name(self, class_name):
+        instance = self.class_(self.index, self.n_values)
+
+        # Overwrite the name of the instance
+        value_name = 'test_name'
+        instance.name = value_name
+
+        expected = '{}.{}'.format(class_name, value_name)
+        actual = str(instance)
+
+        self.assertEqual(expected, actual)
+
+    def test_repr_with_name(self):
+        self._test_repr_with_name(self.class_name)
+
+    def test_repr_without_name(self):
+        self._test_repr_without_name(self.class_name)
+
+
+class TestLukasiewiczLogicValue(TestLogicValue):
+    def setUp(self):
+        self.class_ = LukasiewiczLogicValue
+        self.class_name = 'LukasiewiczLogicValue'
+
+        self._setUp()
+
+    def test_bool(self):
+        expected_truth_vals = [False, False, True]
+        self._test_bool(expected_truth_vals)
+
+
+class TestPriestLogicValue(TestLogicValue):
+    def setUp(self):
+        self.class_ = PriestLogicValue
+        self.class_name = 'PriestLogicValue'
+
+        self._setUp()
+
+    def test_bool(self):
+        expected_truth_vals = [False, True, True]
+        self._test_bool(expected_truth_vals)
+
+
+class TestLogicSystem(TestCase):
+    # TODO
+    pass
+

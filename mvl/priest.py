@@ -3,18 +3,30 @@
 @description: A base class for Priest's 3 valued logic.
 '''
 
-from mvl.kleene import *
-# We want to overwrite the definition for U, so delete the existing definition.
-del globals()['U']
+from mvl.lukasiewicz import PriestLogicValue, LogicSystem
 
-class U(LogicValue):
-    def __int__(self):
-        return 0
+## Begin system setup ##########################################################
 
-    def __bool__(self):
-        return True # In Priest's 3VL, "True" and "Unknown" are truth values.
+priest = LogicSystem(3, PriestLogicValue)
+priest.gen_classes(i_have_read_the_ts_and_cs = True)
 
-    def __repr__(self):
-        return '3VL.Unknown'
+f = priest.values[0]
+u = priest.values[1]
+t = priest.values[2]
+f.name = 'False'
+u.name = 'Unknown'
+t.name = 'True'
 
-U = U()
+############################################################ End system setup ##
+## Begin logical operators #####################################################
+
+from mvl.lukasiewicz import not_
+from mvl.lukasiewicz import w_and as and_
+from mvl.lukasiewicz import w_or as or_
+
+iff = lambda a, b: and_(implies(a, b), implies(b, a))
+xor = lambda a, b: not_( iff( a, b ))
+implies = lambda a, b: or_( not_( a ), b )
+
+####################################################### End logical operators ##
+
