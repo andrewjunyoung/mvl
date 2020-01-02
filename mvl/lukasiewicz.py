@@ -8,6 +8,9 @@ from mvl.settings import CLASS_CREATION_THRESHOLD
 
 
 class LogicValue:
+    name = None
+    class_name = 'LogicValue'
+
     def __eq__(self, other):
         return float(self) == float(other)
 
@@ -22,43 +25,37 @@ class LogicValue:
         self.float_ = index / (n_values - 1)
         self.n_values = n_values
 
-        self.name = None
-
     def __bool__(self):
         # This should be implemented by the inheritors of this class.
-        raise NotImplementedError()
+        raise NotImplementedError('This method should be implemented by child' \
+        'classes')
 
-    def _repr(self, class_name):
+    def __repr__(self):
         if self.name:
-            return '{}.{}'.format(class_name, self.name)
+            return '{}.{}'.format(self.class_name, self.name)
         else: # self.name is None
             return '{}({} of {})'.format(
-                class_name,
+                self.class_name,
                 self.index,
                 self.n_values,
             )
-
-    def __repr__(self):
-        return self._repr('LogicValue')
 
     def __float__(self):
         return self.float_
 
 
 class LukasiewiczLogicValue(LogicValue):
+    class_name = 'LukasiewiczLogicValue'
+
     def __bool__(self):
         return float(self) == 1
 
-    def __repr__(self):
-        return self._repr('LukasiewiczLogicValue')
-
 
 class PriestLogicValue(LogicValue):
+    class_name = 'PriestLogicValue'
+
     def __bool__(self):
         return float(self) != 0
-
-    def __repr__(self):
-        return self._repr('PriestLogicValue')
 
 
 class LogicSystem:
@@ -70,7 +67,9 @@ class LogicSystem:
         self.logic_value_class = logic_value_class
 
     def gen_classes(self, i_have_read_the_ts_and_cs = False):
-        if self.n_values > CLASS_CREATION_THRESHOLD:
+        if (self.n_values > CLASS_CREATION_THRESHOLD
+            and not i_have_read_the_ts_and_cs
+        ):
             print('''
 Hello! It seems that you're trying to create a *lot* of classes
 right now!
@@ -87,12 +86,11 @@ function with the parameter `i_have_read_the_ts_and_cs = True`.
 Happy hacking!
             ''')
             return
-        else:
-            name = 'LogicValue'
-            self.values = [
-                self.logic_value_class(i, self.n_values)
-                for i in range(self.n_values)
-            ]
+
+        self.values = [
+            self.logic_value_class(i, self.n_values)
+            for i in range(self.n_values)
+        ]
 
     def mvl(self, f):
         return self.values[int(f * self.n_values) - 1]
