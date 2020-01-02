@@ -10,17 +10,14 @@ from mvl.lukasiewicz import (
 )
 
 class TestLogicValue(TestCase):
-    def _setUp(self):
+    class_ = LogicValue
+    class_name = 'LogicValue'
+
+    def setUp(self):
         self.index = 3
         self.n_values = 5
         self.float_ = self.index / (self.n_values - 1)
         self.instance = self.class_(self.index, self.n_values)
-
-    def setUp(self):
-        self.class_ = LogicValue
-        self.class_name = 'LogicValue'
-
-        self._setUp()
 
     def test_eq(self):
         instance = self.instance
@@ -70,11 +67,8 @@ class TestLogicValue(TestCase):
 
 
 class TestLukasiewiczLogicValue(TestLogicValue):
-    def setUp(self):
-        self.class_ = LukasiewiczLogicValue
-        self.class_name = 'LukasiewiczLogicValue'
-
-        self._setUp()
+    class_ = LukasiewiczLogicValue
+    class_name = 'LukasiewiczLogicValue'
 
     def test_bool(self):
         expected_truth_vals = [False, False, True]
@@ -82,11 +76,8 @@ class TestLukasiewiczLogicValue(TestLogicValue):
 
 
 class TestPriestLogicValue(TestLogicValue):
-    def setUp(self):
-        self.class_ = PriestLogicValue
-        self.class_name = 'PriestLogicValue'
-
-        self._setUp()
+    class_ = PriestLogicValue
+    class_name = 'PriestLogicValue'
 
     def test_bool(self):
         expected_truth_vals = [False, True, True]

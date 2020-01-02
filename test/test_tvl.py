@@ -17,8 +17,11 @@ import mvl.priest as priest
 ## Begin test template classes #################################################
 
 
-class TVLTestCase():
-    def _setUp(self):
+class TVLTestCase(TestCase):
+    __test__ = False # Makes sure tests are not run on base class.
+    mvl = None
+
+    def setUp(self):
         mvl = self.mvl
 
         self.f = mvl.f
@@ -47,7 +50,7 @@ class TVLCoreTests(TVLTestCase):
             self._test_int_eval(val, expected[str(val)])
 
 
-class TVLOperatorTests(TVLTestCase):
+class OperatorTests(TVLTestCase):
     def _test_binary_operator(self, op, expected_truth_table):
         f = self.f
         u = self.u
@@ -98,7 +101,7 @@ class TVLOperatorTests(TVLTestCase):
         self._test_binary_operator(self.mvl.iff, expected_truth_table)
 
 
-class KleenePriestOperatorTests(TVLOperatorTests):
+class KleenePriestOperatorTests(OperatorTests):
     def test_and_(self):
         f = self.f
         u = self.u
@@ -152,7 +155,7 @@ class KleenePriestOperatorTests(TVLOperatorTests):
         self._test_binary_operator(self.mvl.implies, expected_truth_table)
 
 
-class BochvarOperatorsTests(TVLOperatorTests):
+class BochvarOperatorsTests(OperatorTests):
     def test_and_(self):
         f = self.f
         u = self.u
@@ -197,10 +200,9 @@ class BochvarOperatorsTests(TVLOperatorTests):
 ## Begin test classes ##########################################################
 
 
-class TestKleeneCore(TVLCoreTests, TestCase):
-    def setUp(self):
-        self.mvl = kleene
-        self._setUp()
+class TestKleeneCore(TVLCoreTests):
+    __test__ = True
+    mvl = kleene
 
     def test_bool_eval(self):
         expected = {
@@ -213,28 +215,24 @@ class TestKleeneCore(TVLCoreTests, TestCase):
             self._test_bool_eval(val, expected[str(val)])
 
 
-class TestKleeneOperators(KleenePriestOperatorTests, TestCase):
-    def setUp(self):
-        self.mvl = kleene
-        self._setUp()
+class TestKleeneOperators(KleenePriestOperatorTests):
+    __test__ = True
+    mvl = kleene
 
 
-class TestBochvarCore(TestKleeneCore, TestCase):
-    def setUp(self):
-        self.mvl = bochvar
-        self._setUp()
+class TestBochvarCore(TestKleeneCore):
+    __test__ = True
+    mvl = bochvar
 
 
-class TestBochvarOperators(BochvarOperatorsTests, TestCase):
-    def setUp(self):
-        self.mvl = bochvar
-        self._setUp()
+class TestBochvarOperators(BochvarOperatorsTests):
+    __test__ = True
+    mvl = bochvar
 
 
-class TestPriestCore(TVLCoreTests, TestCase):
-    def setUp(self):
-        self.mvl = priest
-        self._setUp()
+class TestPriestCore(TVLCoreTests):
+    __test__ = True
+    mvl = priest
 
     def test_bool_eval(self):
         expected = {
@@ -247,10 +245,9 @@ class TestPriestCore(TVLCoreTests, TestCase):
             self._test_bool_eval(val, expected[str(val)])
 
 
-class TestPriestOperators(KleenePriestOperatorTests, TestCase):
-    def setUp(self):
-        self.mvl = priest
-        self._setUp()
+class TestPriestOperators(KleenePriestOperatorTests):
+    __test__ = True
+    mvl = priest
 
 
 ############################################################ End test classes ##
