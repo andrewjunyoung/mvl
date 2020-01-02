@@ -31,23 +31,19 @@ class TVLTestCase(TestCase):
         self.vals = [self.f, self.u, self.t]
 
 class TVLCoreTests(TVLTestCase):
-    def _test_int_eval(self, val, expected):
-        actual = float(val)
-        self.assertEqual(expected, actual)
+    def _test_float_eval(self, expected_floats):
+        for i in range(3):
+            actual = float(self.vals[i])
+            self.assertEqual(expected_floats[i], actual)
 
-    def _test_bool_eval(self, val, expected):
-        actual = bool(val)
-        self.assertEqual(expected, actual)
+    def _test_bool_eval(self, expected_truth_vals):
+        for i in range(3):
+            actual = bool(self.vals[i])
+            self.assertEqual(expected_truth_vals[i], actual)
 
-    def test_int_eval(self):
-        expected = {
-            str(self.f): 0,
-            str(self.u): 0.5,
-            str(self.t): 1,
-        }
-
-        for val in self.vals:
-            self._test_int_eval(val, expected[str(val)])
+    def test_float_eval(self):
+        expected_floats = [0, 0.5, 1]
+        self._test_float_eval(expected_floats)
 
 
 class OperatorTests(TVLTestCase):
@@ -205,14 +201,8 @@ class TestKleeneCore(TVLCoreTests):
     mvl = kleene
 
     def test_bool_eval(self):
-        expected = {
-            str(self.f): False,
-            str(self.u): False,
-            str(self.t): True,
-        }
-
-        for val in self.vals:
-            self._test_bool_eval(val, expected[str(val)])
+        expected_truth_vals = [False, False, True]
+        self._test_bool_eval(expected_truth_vals)
 
 
 class TestKleeneOperators(KleenePriestOperatorTests):
@@ -235,14 +225,8 @@ class TestPriestCore(TVLCoreTests):
     mvl = priest
 
     def test_bool_eval(self):
-        expected = {
-            str(self.f): False,
-            str(self.u): True,
-            str(self.t): True,
-        }
-
-        for val in self.vals:
-            self._test_bool_eval(val, expected[str(val)])
+        expected_truth_vals = [False, True, True]
+        self._test_bool_eval(expected_truth_vals)
 
 
 class TestPriestOperators(KleenePriestOperatorTests):
