@@ -1,17 +1,19 @@
 # MVL (many valued logic)
 
-MVL («many valued logic») is a python package which implements different types
-of logic systems which use more than 2 values.
+MVL (many valued logic) is a python package which implements different logic
+systems that use more than 2 values.
 
 ## What logic systems are implemented?
 The following 3 valued logic systems are supported by MVL:
+  - Bochvar
   - Kleene
   - Priest
 
+The following n valued logic systems are supported by MVL:
+  - Łukasiewicz
+
 The following systems are planned for future support:
-  - Łukasiewicz MVL
-  - Goedel MVL
-  - Bochvar 3VL
+  - Gödel MVL
 
 ## Usage
 
