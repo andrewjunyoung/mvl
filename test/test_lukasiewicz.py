@@ -1,10 +1,8 @@
 # Imports from third party packages.
 from unittest import TestCase
 from unittest import main as unittest_main
-from unittest.mock import patch
 
 # Imports from the local package.
-from test.settings import LUKASIEWICZ_PATH
 from mvl.lukasiewicz import (
     LogicValue,
     LogicSystem,
@@ -95,77 +93,22 @@ class TestLogicSystem(TestCase):
     def _logic_system(self):
         return LogicSystem(self.n_values, self.logic_value_class)
 
-    def test_gen_classes_below_threshold_without_reading_ts_and_cs(self):
+    def test_gen_classes_with_reading_ts_and_cs(self):
         ## Setup ###############################################################
 
         n_values = self.n_values
-        # If n_values <= threshold, then should not warn the user.
-        test_thresholds = [n_values, n_values + 1]
-
-        logic_system = self._logic_system()
-
-        for threshold in test_thresholds:
-            ## Execution #######################################################
-
-            with patch(LUKASIEWICZ_PATH + '.CLASS_CREATION_THRESHOLD', threshold
-            ):
-                with patch(LUKASIEWICZ_PATH + '.print') as mock_print:
-                    logic_system.gen_classes()
-
-            ## Assertion #######################################################
-
-            # Assert <n_values> logic values have been added.
-            self.assertEqual(n_values, len(logic_system.values))
-            # Assert nothing has been printed to stdout.
-            mock_print.assert_not_called()
-
-    def test_gen_classes_above_threshold_without_reading_ts_and_cs(self):
-        ## Setup ###############################################################
-
-        # If n_values > threshold, then should warn the user.
-        threshold = self.n_values - 1
 
         logic_system = self._logic_system()
 
         ## Execution ###########################################################
 
-        with patch(LUKASIEWICZ_PATH + '.CLASS_CREATION_THRESHOLD', threshold):
-            with patch(LUKASIEWICZ_PATH + '.print') as mock_print:
-                logic_system.gen_classes()
+        logic_system.gen_classes()
 
         ## Assertion ###########################################################
 
-        # Assert no logic values have been added.
-        self.assertEqual(0, len(logic_system.values))
-        # Assert a warning has been printed to stdout.
-        mock_print.assert_called_once()
-
-
-    def test_gen_classes_with_reading_ts_and_cs(self):
-        ## Setup ###############################################################
-
-        n_values = self.n_values
-        test_thresholds = [n_values - 1, n_values, n_values + 1]
-
-        logic_system = self._logic_system()
-
-        for threshold in test_thresholds:
-            ## Execution #######################################################
-
-            with patch(LUKASIEWICZ_PATH + '.CLASS_CREATION_THRESHOLD', threshold
-            ):
-                with patch(LUKASIEWICZ_PATH + '.print') as mock_print:
-                    logic_system.gen_classes(i_have_read_the_ts_and_cs = True)
-
-            ## Assertion #######################################################
-
-            # Assert <n_values> logic values have been added.
-            self.assertEqual(n_values, len(logic_system.values))
-            # Assert nothing has been printed to stdout.
-            mock_print.assert_not_called()
+        # Assert <n_values> logic values have been added.
+        self.assertEqual(n_values, len(logic_system.values))
 
 
 if __name__ == '__main__':
     unittest_main()
-
-
