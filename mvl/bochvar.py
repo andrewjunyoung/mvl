@@ -13,11 +13,23 @@ from mvl.types import Floatable
 ## Begin system setup ##########################################################
 
 bochvar: LogicSystem = LogicSystem(3, LukasiewiczLogicValue)
-bochvar.gen_classes()
+""" A 3 valued LogicSystem which uses the values «False»; «Unknown»; and «True».
+Bochvar logic systems are like lukasiewicz and kleene logic systems in that
+«True» is considered the only truth value, but use different logical operators.
+"""
 
 f: LukasiewiczLogicValue = bochvar.values[0]
+""" The bochvar logic value «False».
+"""
+
 u: LukasiewiczLogicValue = bochvar.values[1]
+""" The bochvar logic value «Unknown».
+"""
+
 t: LukasiewiczLogicValue = bochvar.values[2]
+""" The bochvar logic value «True».
+"""
+
 f.name = 'False'
 u.name = 'Unknown'
 t.name = 'True'

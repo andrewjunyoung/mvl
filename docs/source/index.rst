@@ -5,11 +5,6 @@ MVL documentation pages
    :maxdepth: 2
    :caption: Contents:
 
-Settings
-============
-.. automodule:: mvl.settings
-   :members:
-
 Lukasiewicz
 ===============
 .. automodule:: mvl.lukasiewicz

@@ -121,8 +121,9 @@ class LogicSystem:
     def __init__(self, n_values: int, logic_value_class: Callable) -> None:
         self.n_values: int = n_values
         self.logic_value_class: Callable = logic_value_class
+        self._gen_classes() # Sets self.values to a list of LogicValues.
 
-    def gen_classes(self) -> None:
+    def _gen_classes(self) -> None:
         """ Generates self.n_values LogicValues, in order, for the current
         logical system, and saves these objects in self.values.
         """
