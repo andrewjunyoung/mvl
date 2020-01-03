@@ -8,6 +8,13 @@ from mvl.lukasiewicz import (
     LogicSystem,
     LukasiewiczLogicValue,
     PriestLogicValue,
+    s_and,
+    w_and,
+    s_or,
+    w_or,
+    not_,
+    implies,
+    equivalent,
 )
 
 class TestLogicValue(TestCase):
@@ -108,6 +115,133 @@ class TestLogicSystem(TestCase):
 
         # Assert <n_values> logic values have been added.
         self.assertEqual(n_values, len(logic_system.values))
+
+
+class TestOperators(TestCase):
+    def _test_binary_operator(self, op, inputs_to_output_map):
+        for inputs, expected_output in inputs_to_output_map.items():
+            a = inputs[0]
+            b = inputs[1]
+
+            actual_output = op(a, b)
+
+            self.assertAlmostEqual(expected_output, actual_output)
+
+    def _test_unary_operator(self, op, inputs_to_output_map):
+        for input_, expected_output in inputs_to_output_map.items():
+            a = input_
+
+            actual_output = op(a)
+
+            self.assertAlmostEqual(expected_output, actual_output)
+
+    def test_s_and(self):
+        inputs_to_output_map = {
+                (0, 1): 0,
+                (1, 0): 0,
+                (1, 1): 1,
+                (0, 0): 0,
+              (0.5, 0): 0,
+              (0, 0.5): 0,
+              (0.5, 1): 0.5,
+              (1, 0.5): 0.5,
+            (0.5, 0.5): 0,
+            (0.2, 0.7): 0,
+            (0.2, 0.2): 0,
+        }
+        self._test_binary_operator(s_and, inputs_to_output_map)
+
+    def test_w_and(self):
+        inputs_to_output_map = {
+                (0, 1): 0,
+                (1, 0): 0,
+                (1, 1): 1,
+                (0, 0): 0,
+              (0.5, 0): 0,
+              (0, 0.5): 0,
+              (0.5, 1): 0.5,
+              (1, 0.5): 0.5,
+            (0.5, 0.5): 0.5,
+            (0.2, 0.7): 0.2,
+            (0.2, 0.2): 0.2,
+        }
+        self._test_binary_operator(w_and, inputs_to_output_map)
+
+    def test_s_or(self):
+        inputs_to_output_map = {
+                (0, 1): 1,
+                (1, 0): 1,
+                (1, 1): 1,
+                (0, 0): 0,
+              (0.5, 0): 0.5,
+              (0, 0.5): 0.5,
+              (0.5, 1): 1,
+              (1, 0.5): 1,
+            (0.5, 0.5): 1,
+            (0.2, 0.7): 0.9,
+            (0.2, 0.2): 0.4,
+        }
+        self._test_binary_operator(s_or, inputs_to_output_map)
+
+    def test_w_or(self):
+        inputs_to_output_map = {
+                (0, 1): 1,
+                (1, 0): 1,
+                (1, 1): 1,
+                (0, 0): 0,
+              (0.5, 0): 0.5,
+              (0, 0.5): 0.5,
+              (0.5, 1): 1,
+              (1, 0.5): 1,
+            (0.5, 0.5): 0.5,
+            (0.2, 0.7): 0.7,
+            (0.2, 0.2): 0.2,
+        }
+        self._test_binary_operator(w_or, inputs_to_output_map)
+
+    def test_not_(self):
+        inputs_to_output_map = {
+              0: 1,
+            0.2: 0.8,
+            0.4: 0.6,
+            0.5: 0.5,
+            0.6: 0.4,
+            0.8: 0.2,
+              1: 0,
+        }
+        self._test_unary_operator(not_, inputs_to_output_map)
+
+    def test_implies(self):
+        inputs_to_output_map = {
+                (0, 1): 1,
+                (1, 0): 0,
+                (1, 1): 1,
+                (0, 0): 1,
+              (0.5, 0): 0.5,
+              (0, 0.5): 1,
+              (0.5, 1): 1,
+              (1, 0.5): 0.5,
+            (0.5, 0.5): 1,
+            (0.2, 0.7): 1,
+            (0.2, 0.2): 1,
+        }
+        self._test_binary_operator(implies, inputs_to_output_map)
+
+    def test_equivalent(self):
+        inputs_to_output_map = {
+                (0, 1): 0,
+                (1, 0): 0,
+                (1, 1): 1,
+                (0, 0): 1,
+              (0.5, 0): 0.5,
+              (0, 0.5): 0.5,
+              (0.5, 1): 0.5,
+              (1, 0.5): 0.5,
+            (0.5, 0.5): 1,
+            (0.2, 0.6): 0.6,
+            (0.2, 0.2): 1,
+        }
+        self._test_binary_operator(equivalent, inputs_to_output_map)
 
 
 if __name__ == '__main__':
