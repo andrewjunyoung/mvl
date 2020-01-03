@@ -43,7 +43,7 @@ class LogicValue:
     def __nonzero__(self) -> bool:
         return self.__bool__()
 
-    def __init__(self, index: int, n_values: int):
+    def __init__(self, index: int, n_values: int) -> None:
         self.index: int = index
         self.float_: float = index / (n_values - 1)
         self.n_values: int = n_values
@@ -112,7 +112,7 @@ class LogicSystem:
         n_values (int): The number of values in the LogicSystem. Equal to
             len(LogicSystem.values).
         values (List[LogicValue]): The ordered list of logic values in the
-        logical system.
+            logical system.
     """
 
     n_values: int = 0
@@ -122,7 +122,7 @@ class LogicSystem:
         self.n_values: int = n_values
         self.logic_value_class: Callable = logic_value_class
 
-    def gen_classes(self):
+    def gen_classes(self) -> None:
         """ Generates self.n_values LogicValues, in order, for the current
         logical system, and saves these objects in self.values.
         """

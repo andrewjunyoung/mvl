@@ -27,7 +27,7 @@ t.name = 'True'
 
 from mvl.tvl_operators import not_, iff
 
-def and_(a: Floatable, b: Floatable):
+def and_(a: Floatable, b: Floatable) -> float:
     """ The and operator used by Bochvar. This operator (and; &) has the truth
     table:
 
@@ -51,10 +51,10 @@ def and_(a: Floatable, b: Floatable):
         LogicValue: a & b
     """
     if a == u or b == u:
-        return u
+        return float(u)
     return float(bool(a) and bool(b))
 
-def or_(a: Floatable, b: Floatable):
+def or_(a: Floatable, b: Floatable) -> float:
     """
     The or operator used by Bochvar. This operator (or; |) has the truth
     table:
@@ -79,10 +79,10 @@ def or_(a: Floatable, b: Floatable):
         LogicValue: a | b
     """
     if a == u or b == u:
-        return u
+        return float(u)
     return float(bool(a) or bool(b))
 
-def implies(a: Floatable, b: Floatable):
+def implies(a: Floatable, b: Floatable) -> float:
     """
     The implication operator used by Bochvar. This operator (->; →) has the
     truth table:
@@ -107,7 +107,7 @@ def implies(a: Floatable, b: Floatable):
         LogicValue: a → b
     """
     if a == u or b == u:
-        return u
+        return float(u)
     return float(bool(b) ** bool(a)) # Equivalent to normal boolean implication.
 
 ####################################################### End logical operators ##
