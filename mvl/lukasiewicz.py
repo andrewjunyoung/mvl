@@ -1,103 +1,261 @@
-'''
-@author: Andrew J. Young
-@description: A base class for Lukasiewicz's 3 valued logic.
-'''
+"""
+.. module: Lukasiewicz
+   :synopsis: The default classes and methods for building finite valued logic
+   systems. Includes the methods for creating Lukasiewicz finite valued logic
+   systems.
+
+.. moduleauthor: Andrew J. Young
+"""
+
+from typing import List, Callable
+
+
+from mvl.types import Floatable
+
 
 class LogicValue:
-    def __eq__(self, other):
-        return int(self) == int(other)
+    """ A representation of a general lukasiewicz-goedel logic value.
 
-    def __ne__(self, other):
-        return int(self) != int(other)
+    Lukasiewicz and goedel logic values span over the interval [0, 1], and can
+    be finite or infinite in length (but for practical reasons, the latter is
+    not implemented using classes).
 
-    def __nonzero__(self):
+    Attributes:
+        name (str): An alternative name for the logic value, used in the
+            representation of the class. See __repr__.
+        class_name (str): The name of the class, used in its representation. See
+            __repr__. Equal to 'LogicValue'
+    """
+    name: str = ''
+    class_name: str = 'LogicValue'
+
+    def __eq__(self, other: Floatable) -> bool:
+        """ Logic values are equal iff they are part of the same logical system,
+        and have the same numerical representation.
+        """
+        return float(self) == float(other)
+
+    def __ne__(self, other: object) -> bool:
+        """ Returns true iff the two values are not equal.
+        """
+        return not self.__eq__(other)
+
+    def __nonzero__(self) -> bool:
         return self.__bool__()
 
+    def __init__(self, val: float) -> None:
+        self.val: float = val
 
-class F(LogicValue):
-    def __int__(self):
-        return -1
+    @classmethod
+    def from_frac(cls, index: int, max_index: int) -> None:
+        return cls(index / max_index)
 
-    def __bool__(self):
-        return False
+    def __bool__(self) -> bool:
+        """ Whether or not they are considered to be "true" in a 2 valued
+        boolean sense is determined by the implementation of this class.
 
-    def __repr__(self):
-        return '3VL.False'
+        Raises:
+            NotImplementedError
+        """
+        raise NotImplementedError('This method should be implemented by child' \
+        'classes')
 
+    def __repr__(self) -> str:
+        if self.name != '':
+            return '{}.{}'.format(self.class_name, self.name)
+        else: # self.name is None
+            return '{}({})'.format(
+                self.class_name,
+                self.val
+            )
 
-class U(LogicValue):
-    def __int__(self):
-        return 0
-
-    def __bool__(self):
-        return False # In Kleene's 3VL, "True" is the only truth value.
-
-    def __repr__(self):
-        return '3VL.Unknown'
-
-
-class T(LogicValue):
-    def __int__(self):
-        return 1
-
-    def __bool__(self):
-        return True
-
-    def __repr__(self):
-        return '3VL.True'
+    def __float__(self) -> float:
+        return self.val
 
 
-def bool_(a):
-    return a == 1
+class LukasiewiczLogicValue(LogicValue):
+    """ A type of LogicValue. LukasiewiczLogicValues are considered to be "true"
+    (in a 2 valued boolean sense) iff their float representation is 1.
 
-
-def not_(a):
-    return tvl(1 - a)
-
-
-def s_and(a, b):
-    """ "Strong and" operator.
+    Attributes:
+        name (str): An alternative name for the logic value, used in the
+            representation of the class. See __repr__.
+        class_name (str): The name of the class, used in its representation. See
+            __repr__. Equal to 'LukasiewiczLogicValue'.
     """
-    return tvl(max(0, int(a) + int(b) - 1))
+    class_name: str = 'LukasiewiczLogicValue'
+
+    def __bool__(self) -> bool:
+        return float(self) == 1
 
 
-def w_and(a, b):
-    """ "Weak and" operator.
-    |   | U | T | F |
-    | U | U | U | F |
-    | T | U | T | F |
-    | F | F | F | F |
+class PriestLogicValue(LogicValue):
+    """ A type of LogicValue. PriestLogicValues are considered to be "true"
+    (in a 2 valued boolean sense) iff their float representation not 0.
+
+    Attributes:
+        name (str): An alternative name for the logic value, used in the
+            representation of the class. See __repr__.
+        class_name (str): The name of the class, used in its representation. See
+            __repr__. Equal to 'PriestLogicValue'.
     """
-    return tvl(min(int(a), int(b)))
+    class_name: str = 'PriestLogicValue'
+
+    def __bool__(self) -> bool:
+        return float(self) != 0
 
 
-def s_or(a, b):
-    """ "Strong or" operator, equivalent to xor.
-    |   | U | T | F |
-    | U | U | U | F |
-    | T | U | T | F |
-    | F | F | F | F |
+class LogicSystem:
+    """ A class for creating logical systems and the associated logical values,
+    and for converting numerical values into LogicValues.
+
+    Attributes:
+        n_values (int): The number of values in the LogicSystem. Equal to
+            len(LogicSystem.values).
+        values (List[LogicValue]): The ordered list of logic values in the
+            logical system.
     """
-    return tvl(max(int(a), int(b)))
+
+    n_values: int = 0
+    values: List[LogicValue] = []
+
+    def __init__(self, n_values: int, logic_value_class: Callable) -> None:
+        self.n_values: int = n_values
+        self.logic_value_class: Callable = logic_value_class
+        self._gen_classes() # Sets self.values to a list of LogicValues.
+
+    def _gen_classes(self) -> None:
+        """ Generates self.n_values LogicValues, in order, for the current
+        logical system, and saves these objects in self.values.
+        """
+        max_index = self.n_values - 1
+        self.values: List[LogicValue] = [
+            self.logic_value_class.from_frac(i, max_index)
+            for i in range(self.n_values)
+        ]
+
+    def mvl(self, f: float) -> LogicValue:
+        """ Given a float, returns the associated logic value in the current
+        system, if one exists. """
+        return self.values[int(f * self.n_values) - 1]
 
 
-def w_or(a, b):
-    """ "Weak or" operator, equivalent to (inclusive) "or".
+def s_and(a: Floatable, b: Floatable) -> float:
+    """ Lukasiewicz's «strong and» operator. This operator (&&) is defined by:
+
+    a && b := max {0, a + b - 1}
+
+    Args:
+        a (LogicValue)
+        b (LogicValue)
+
+    Returns:
+        LogicValue: a && b
     """
-    if a == b and b == 0:
-        return T
+    a = float(a)
+    b = float(b)
+    return max(0, a + b - 1)
+
+
+
+def w_and(a: Floatable, b: Floatable) -> float:
+    """ Lukasiewicz's «weak and» operator. This operator (&) is defined by:
+
+    a & b := min {a, b}
+
+    Args:
+        a (LogicValue)
+        b (LogicValue)
+
+    Returns:
+        LogicValue: a & b
+    """
+    a = float(a)
+    b = float(b)
+    return min(a, b)
+
+
+def s_or(a: Floatable, b: Floatable) -> float:
+    """ Lukasiewicz's «strong or» operator. This operator (||) is defined by:
+
+    a || b := min {1, a + b}
+
+    Args:
+        a (LogicValue)
+        b (LogicValue)
+
+    Returns:
+        LogicValue: a || b
+    """
+    a = float(a)
+    b = float(b)
+    return min(1, a + b)
+
+
+def w_or(a: Floatable, b: Floatable) -> float:
+    """ Lukasiewicz's «weak or» operator. This operator (|) is defined by:
+
+    a | b := max {a, b}
+
+    Args:
+        a (LogicValue)
+        b (LogicValue)
+
+    Returns:
+        LogicValue: a | b
+    """
+    a = float(a)
+    b = float(b)
     return max(a, b)
 
 
-def iff(a, b):
-    return int(a) * int(b)
+def not_(a: Floatable) -> float:
+    """ Lukasiewicz's «not» operator. This operator (!) is defined by:
+
+    ! a := 1 - a
+
+    Args:
+        a (LogicValue)
+        b (LogicValue)
+
+    Returns:
+        LogicValue: ! a
+    """
+    a = float(a)
+    return 1 - a
 
 
-def implies(a, b):
-    return tvl(min(1, 1 - a + b))
+def implies(a: Floatable, b: Floatable) -> float:
+    """ Lukasiewicz's «implies» operator. This operator (→) is defined by:
+
+    a → b = min {1, 1 - a + b}
+
+    Args:
+        a (LogicValue)
+        b (LogicValue)
+
+    Returns:
+        LogicValue: a → b
+    """
+    a = float(a)
+    b = float(b)
+    return min(1, 1 - a + b)
 
 
-T = T()
-U = U()
-F = F()
+def equivalent(a: Floatable, b: Floatable) -> float:
+    """ Lukasiewicz's «equivalence» operator. This operator (↔, not to be confused
+    with the biconditional «iff») is defined by:
+
+    a ↔ b = 1 - | a - b |
+
+    Args:
+        a (LogicValue)
+        b (LogicValue)
+
+    Returns:
+        LogicValue: a ↔ b
+    """
+    a = float(a)
+    b = float(b)
+    return (1 - abs(a - b))
 

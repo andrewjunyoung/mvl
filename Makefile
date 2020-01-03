@@ -5,8 +5,7 @@ tree:
 	tree -I 'docs|bin|lib|venv|htmlcov|.coverage'
 
 tests:
-	python -m unittest discover -v
+	nosetests -v
 
 coverage:
-	coverage run -m unittest discover
-	coverage html --omit="venv/*"
+	nosetests -v --with-coverage
