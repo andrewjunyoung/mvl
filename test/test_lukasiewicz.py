@@ -102,7 +102,7 @@ class TestLogicSystem(TestCase):
 
         ## Execution ###########################################################
 
-        logic_system.gen_classes()
+        logic_system._gen_classes()
 
         ## Assertion ###########################################################
 
