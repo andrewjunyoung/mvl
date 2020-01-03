@@ -7,8 +7,11 @@
 .. moduleauthor: Andrew J. Young
 '''
 
+from typing import List, Callable
+
 
 from mvl.settings import CLASS_CREATION_THRESHOLD
+from mvl.types import Floatable
 
 
 class LogicValue:
@@ -24,11 +27,10 @@ class LogicValue:
         class_name (str): The name of the class, used in its representation. See
             __repr__.
     """
-
     name: str = ''
     class_name: str = 'LogicValue'
 
-    def __eq__(self, other: object) -> bool:
+    def __eq__(self, other: Floatable) -> bool:
         """ Logic values are equal iff they are part of the same logical system,
         and have the same numerical representation.
         """
@@ -99,11 +101,11 @@ class PriestLogicValue(LogicValue):
 
 class LogicSystem:
     n_values: int = 0
-    values: int = []
+    values: List[LogicValue] = []
 
-    def __init__(self, n_values: int, logic_value_class: class):
+    def __init__(self, n_values: int, logic_value_class: Callable) -> None:
         self.n_values: int = n_values
-        self.logic_value_class: class = logic_value_class
+        self.logic_value_class: Callable = logic_value_class
 
     def gen_classes(self, i_have_read_the_ts_and_cs: bool = False):
         if (self.n_values > CLASS_CREATION_THRESHOLD
@@ -135,42 +137,42 @@ Happy hacking!
         return self.values[int(f * self.n_values) - 1]
 
 
-def s_and(a: LogicValueRepr, b: LogicValueRepr) -> float:
+def s_and(a: Floatable, b: Floatable) -> float:
     a = float(a)
     b = float(b)
     return max(0, a + b - 1)
 
 
-def w_and(a: LogicValueRepr, b: LogicValueRepr) -> float:
+def w_and(a: Floatable, b: Floatable) -> float:
     a = float(a)
     b = float(b)
     return min(a, b)
 
 
-def s_or(a: LogicValueRepr, b: LogicValueRepr) -> float:
+def s_or(a: Floatable, b: Floatable) -> float:
     a = float(a)
     b = float(b)
     return min(1, a + b)
 
 
-def w_or(a: LogicValueRepr, b: LogicValueRepr) -> float:
+def w_or(a: Floatable, b: Floatable) -> float:
     a = float(a)
     b = float(b)
     return max(a, b)
 
 
-def not_(a: LogicValueRepr) -> float:
+def not_(a: Floatable) -> float:
     a = float(a)
     return 1 - a
 
 
-def implies(a: LogicValueRepr, b: LogicValueRepr) -> float:
+def implies(a: Floatable, b: Floatable) -> float:
     a = float(a)
     b = float(b)
     return min(1, 1 - a + b)
 
 
-def equivalent(a: LogicValueRepr, b: LogicValueRepr) -> float:
+def equivalent(a: Floatable, b: Floatable) -> float:
     a = float(a)
     b = float(b)
     return (1 - abs(a - b))
