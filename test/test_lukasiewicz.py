@@ -25,7 +25,7 @@ class TestLogicValue(TestCase):
         self.index = 3
         self.n_values = 5
         self.float_ = self.index / (self.n_values - 1)
-        self.instance = self.class_(self.index, self.n_values)
+        self.instance = self.class_.from_frac(self.index, self.n_values - 1)
 
     def test_eq(self):
         instance = self.instance
@@ -34,7 +34,7 @@ class TestLogicValue(TestCase):
 
     def test_ne(self):
         instance = self.instance
-        self.assertNotEqual(instance, self.class_(self.index, self.n_values + 1))
+        self.assertNotEqual(instance, self.class_.from_frac(self.index, self.n_values))
         self.assertNotEqual(instance, self.float_ + 1)
 
     def test_float(self):
@@ -46,17 +46,17 @@ class TestLogicValue(TestCase):
 
     def _test_bool(self, expected_truth_vals):
         for i in range(3):
-            val = self.class_(i, 3)
+            val = self.class_.from_frac(i, 2)
             self.assertEqual(expected_truth_vals[i], bool(val))
 
     def _test_repr_without_name(self, class_name):
-        expected = '{}({} of {})'.format(class_name, self.index, self.n_values)
+        expected = '{}({})'.format(class_name, self.index / (self.n_values - 1))
         actual = str(self.instance)
 
         self.assertEqual(expected, actual)
 
     def _test_repr_with_name(self, class_name):
-        instance = self.class_(self.index, self.n_values)
+        instance = self.class_.from_frac(self.index, self.n_values - 1)
 
         # Overwrite the name of the instance
         value_name = 'test_name'

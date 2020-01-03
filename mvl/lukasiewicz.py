@@ -43,10 +43,12 @@ class LogicValue:
     def __nonzero__(self) -> bool:
         return self.__bool__()
 
-    def __init__(self, index: int, n_values: int) -> None:
-        self.index: int = index
-        self.float_: float = index / (n_values - 1)
-        self.n_values: int = n_values
+    def __init__(self, val: float) -> None:
+        self.val: float = val
+
+    @classmethod
+    def from_frac(cls, index: int, max_index: int) -> None:
+        return cls(index / max_index)
 
     def __bool__(self) -> bool:
         """ Whether or not they are considered to be "true" in a 2 valued
@@ -62,14 +64,13 @@ class LogicValue:
         if self.name != '':
             return '{}.{}'.format(self.class_name, self.name)
         else: # self.name is None
-            return '{}({} of {})'.format(
+            return '{}({})'.format(
                 self.class_name,
-                self.index,
-                self.n_values,
+                self.val
             )
 
     def __float__(self) -> float:
-        return self.float_
+        return self.val
 
 
 class LukasiewiczLogicValue(LogicValue):
@@ -127,8 +128,9 @@ class LogicSystem:
         """ Generates self.n_values LogicValues, in order, for the current
         logical system, and saves these objects in self.values.
         """
+        max_index = self.n_values - 1
         self.values: List[LogicValue] = [
-            self.logic_value_class(i, self.n_values)
+            self.logic_value_class.from_frac(i, max_index)
             for i in range(self.n_values)
         ]
 
