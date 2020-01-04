@@ -1,6 +1,6 @@
 """
-.. module: Goedel
-   :synopsis: The operators and objects used in Goedel logics.
+.. module: goedel
+   :synopsis: The operators and objects used in goedel logics.
 
 .. moduleauthor: Andrew J. Young
 """
@@ -64,7 +64,7 @@ def not_(a: Floatable) -> float:
         LogicValue: ! a
     """
     a = float(a)
-    return int(a == 0)
+    return float(a == 0)
 
 
 def implies(a: Floatable, b: Floatable) -> float:
@@ -83,6 +83,7 @@ def implies(a: Floatable, b: Floatable) -> float:
     """
     a = float(a)
     b = float(b)
-    if a <= b:
-        return 1
-    return b
+    if a > b:
+        return b
+    return 1
+
