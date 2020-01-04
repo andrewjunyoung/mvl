@@ -17,6 +17,7 @@ from mvl.lukasiewicz import (
     equivalent,
 )
 import mvl.goedel as goedel
+import mvl.product as product
 
 class TestLogicValue(TestCase):
     class_ = LogicValue
@@ -316,6 +317,72 @@ class TestGoedelOperators(OperatorsTestCase):
               1: 0,
         }
         self._test_unary_operator(goedel.not_, inputs_to_output_map)
+
+
+class TestProductOperators(OperatorsTestCase):
+    __test__ = True
+
+    def test_and_(self):
+        inputs_to_output_map = {
+                (0, 1): 0,
+                (1, 0): 0,
+                (1, 1): 1,
+                (0, 0): 0,
+              (0.5, 0): 0,
+              (0, 0.5): 0,
+              (0.5, 1): 0.5,
+              (1, 0.5): 0.5,
+            (0.5, 0.5): 0.5,
+            (0.2, 0.6): 0.2,
+            (0.6, 0.2): 0.6 * 1 / 3,
+            (0.2, 0.2): 0.2,
+        }
+        self._test_binary_operator(product.and_, inputs_to_output_map)
+
+    def test_mult(self):
+        inputs_to_output_map = {
+                (0, 1): 0,
+                (1, 0): 0,
+                (1, 1): 1,
+                (0, 0): 0,
+              (0.5, 0): 0,
+              (0, 0.5): 0,
+              (0.5, 1): 0.5,
+              (1, 0.5): 0.5,
+            (0.5, 0.5): 0.25,
+            (0.2, 0.6): 0.12,
+            (0.2, 0.2): 0.04,
+        }
+        self._test_binary_operator(product.mult, inputs_to_output_map)
+
+    def test_implies(self):
+        inputs_to_output_map = {
+                (0, 1): 1,
+                (1, 0): 0,
+                (1, 1): 1,
+                (0, 0): 1,
+              (0.5, 0): 0,
+              (0, 0.5): 1,
+              (0.5, 1): 1,
+              (1, 0.5): 0.5,
+            (0.5, 0.5): 1,
+            (0.2, 0.6): 1,
+            (0.6, 0.2): 1 / 3,
+            (0.2, 0.2): 1,
+        }
+        self._test_binary_operator(product.implies, inputs_to_output_map)
+
+    def test_not_(self):
+        inputs_to_output_map = {
+              0: 1,
+            0.2: 0,
+            0.4: 0,
+            0.5: 0,
+            0.6: 0,
+            0.8: 0,
+              1: 0,
+        }
+        self._test_unary_operator(product.not_, inputs_to_output_map)
 
 
 if __name__ == '__main__':

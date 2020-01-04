@@ -15,6 +15,16 @@ Goedel
 .. automodule:: mvl.goedel
    :members:
 
+Product logic
+=============
+.. automodule:: mvl.product
+   :members:
+
+Post logic
+==========
+.. automodule:: mvl.post
+   :members:
+
 Bochvar
 =======
 .. automodule:: mvl.bochvar
