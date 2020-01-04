@@ -18,6 +18,8 @@ from mvl.lukasiewicz import (
 )
 import mvl.goedel as goedel
 import mvl.product as product
+import mvl.post as post
+
 
 class TestLogicValue(TestCase):
     class_ = LogicValue
@@ -94,6 +96,16 @@ class TestPriestLogicValue(TestLogicValue):
     def test_bool(self):
         expected_truth_vals = [False, True, True]
         self._test_bool(expected_truth_vals)
+
+
+class TestPostLukasiewiczLogicValue(TestLukasiewiczLogicValue):
+    class_ = post.PostLukasiewiczLogicValue
+    class_name = 'PostLukasiewiczLogicValue'
+
+
+class TestPostPriestLogicValue(TestPriestLogicValue):
+    class_ = post.PostPriestLogicValue
+    class_name = 'PostPriestLogicValue'
 
 
 class TestLogicSystem(TestCase):
@@ -383,6 +395,35 @@ class TestProductOperators(OperatorsTestCase):
               1: 0,
         }
         self._test_unary_operator(product.not_, inputs_to_output_map)
+
+
+class TestPostOperators(OperatorsTestCase):
+    __test__ = True
+
+    def _test_not_(self, class_):
+        logic_system = LogicSystem(6, class_)
+        inputs_to_output_map = {
+            0: 1,
+            1: 0,
+            2: 0.2,
+            3: 0.4,
+            4: 0.6,
+            5: 0.8,
+        }
+
+        for index, expected_output in inputs_to_output_map.items():
+            input_ = logic_system.values[index]
+            print(float(input_))
+
+            actual = post.not_(input_)
+
+            self.assertAlmostEqual(expected_output, actual)
+
+    def test_priest_not(self):
+        self._test_not_(post.PostPriestLogicValue)
+
+    def test_lukasiewicz_not(self):
+        self._test_not_(post.PostLukasiewiczLogicValue)
 
 
 if __name__ == '__main__':
