@@ -11,11 +11,12 @@ The following 3 valued logic systems are supported by MVL:
 
 The following n valued logic systems are supported by MVL:
   - Łukasiewicz
-  - Gödel MVL
-
-The following systems are planned for future support:
+  - Gödel (under the name «goedel»
   - Product logic
   - Post logic
+
+The following systems are planned for future support:
+  - Belnap's 4 valued logic
 
 ## Usage
 
