@@ -16,6 +16,7 @@ from mvl.lukasiewicz import (
     implies,
     equivalent,
 )
+import mvl.goedel as goedel
 
 class TestLogicValue(TestCase):
     class_ = LogicValue
@@ -34,7 +35,9 @@ class TestLogicValue(TestCase):
 
     def test_ne(self):
         instance = self.instance
-        self.assertNotEqual(instance, self.class_.from_frac(self.index, self.n_values))
+        self.assertNotEqual(instance, self.class_.from_frac(
+            self.index, self.n_values
+        ))
         self.assertNotEqual(instance, self.float_ + 1)
 
     def test_float(self):
@@ -117,7 +120,9 @@ class TestLogicSystem(TestCase):
         self.assertEqual(n_values, len(logic_system.values))
 
 
-class TestOperators(TestCase):
+class OperatorsTestCase(TestCase):
+    __test__ = False
+
     def _test_binary_operator(self, op, inputs_to_output_map):
         for inputs, expected_output in inputs_to_output_map.items():
             a = inputs[0]
@@ -134,6 +139,10 @@ class TestOperators(TestCase):
             actual_output = op(a)
 
             self.assertAlmostEqual(expected_output, actual_output)
+
+
+class TestLukasiewiczOperators(OperatorsTestCase):
+    __test__ = True
 
     def test_s_and(self):
         inputs_to_output_map = {
@@ -242,6 +251,71 @@ class TestOperators(TestCase):
             (0.2, 0.2): 1,
         }
         self._test_binary_operator(equivalent, inputs_to_output_map)
+
+
+class TestGoedelOperators(OperatorsTestCase):
+    __test__ = True
+
+    def test_and_(self):
+        inputs_to_output_map = {
+                (0, 1): 0,
+                (1, 0): 0,
+                (1, 1): 1,
+                (0, 0): 0,
+              (0.5, 0): 0,
+              (0, 0.5): 0,
+              (0.5, 1): 0.5,
+              (1, 0.5): 0.5,
+            (0.5, 0.5): 0.5,
+            (0.2, 0.6): 0.2,
+            (0.2, 0.2): 0.2,
+        }
+        self._test_binary_operator(goedel.and_, inputs_to_output_map)
+
+    def test_or_(self):
+        inputs_to_output_map = {
+                (0, 1): 1,
+                (1, 0): 1,
+                (1, 1): 1,
+                (0, 0): 0,
+              (0.5, 0): 0.5,
+              (0, 0.5): 0.5,
+              (0.5, 1): 1,
+              (1, 0.5): 1,
+            (0.5, 0.5): 0.5,
+            (0.2, 0.6): 0.6,
+            (0.2, 0.2): 0.2,
+        }
+        self._test_binary_operator(goedel.or_, inputs_to_output_map)
+
+    def test_implies(self):
+        inputs_to_output_map = {
+                (0, 1): 1,
+                (1, 0): 0,
+                (1, 1): 1,
+                (0, 0): 1,
+              (0.5, 0): 0,
+              (0, 0.5): 1,
+              (0.5, 1): 1,
+              (1, 0.5): 0.5,
+            (0.5, 0.5): 1,
+            (0.2, 0.6): 1,
+            (0.6, 0.2): 0.2,
+            (0.2, 0.2): 1,
+        }
+        self._test_binary_operator(goedel.implies, inputs_to_output_map)
+
+    def test_not_(self):
+        inputs_to_output_map = {
+              0: 1,
+            0.2: 0,
+            0.4: 0,
+            0.5: 0,
+            0.6: 0,
+            0.8: 0,
+              1: 0,
+        }
+        self._test_unary_operator(goedel.not_, inputs_to_output_map)
 
 
 if __name__ == '__main__':
