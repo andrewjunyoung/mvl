@@ -17,13 +17,16 @@ use more than 2, or infinite truth values, beyond «True» and «False».
 * [What does MVL do?](#what-does-mvl-do)
   * [Example usage](#example-usage)
 * [Where to get it](#where-to-get-it)
-  * [Using pip](#using-pip)
+  * [PyPI (pip)](#pypi-pip)
 * [Features](#features)
   * [Summary](#summary)
-  * [Available logic systems (full)](#available-logic-systems-full)
+  * [Supported logic systems](#supported-logic-systems)
+* [Usage examples](#usage-examples)
+  * [Importing and using 3 valued systems](#importing-and-using-3-valued-systems)
+  * [Creating n valued logical systems](#creating-n-valued-logical-systems)
+  * [Creating arbitrary logical values](#creating-arbitrary-logical-values)
 * [License](#license)
 * [Documentation](#documentation)
-* [Usage](#usage)
 * [Links](#links)
 
 <!-- vim-markdown-toc -->
@@ -121,7 +124,7 @@ letter.
 
 The source code is hosted on github at https://github.com/andrewjunyoung/mvl.
 
-### Using pip
+### PyPI (pip)
 
 
 To install mvl through pip, open a command line interface and run
@@ -138,7 +141,7 @@ $ pip install mvl
 - A rich library of logical operators for 3, n, and ∞ valued logic.
 - Conversion between floats and logical values.
 
-### Available logic systems (full)
+### Supported logic systems
 The following 3 valued logic systems are supported by MVL:
   - Bochvar
   - Kleene
@@ -154,34 +157,30 @@ The following systems are planned for future support:
   - Belnap's 4 valued logic
 
 
-## License
-
-Unlicense. 
-
-## Documentation
-
-TODO
-
-## Usage
+## Usage examples
 
 Using MVL is designed to integrate with existing python infrastructure as much
 as possible. Example usages of kleene and lukasiewicz logic are given below.
 
-```
->>> from mvl import kleene as k
->>> k.t
-LukasiewiczLogicValue.True
->>> k.and_(k.t, k.u)
-0.5
->>> k.or_(k.u, k.u)
-0.5
->>> k.implies(k.u, k.t)
-1.0
->>> k.implies(k.u, k.u)
-0.5
->>> k.implies(k.f, k.u)
-1.0
+### Importing and using 3 valued systems
 
+```
+>>> from mvl import kleene
+>>> kleene.t
+LukasiewiczLogicValue.True
+>>> kleene.and_(k.t, k.u)
+0.5
+>>> kleene.or_(k.u, k.u)
+0.5
+>>> kleene.implies(k.u, k.u)
+0.5
+>>> kleene.implies(k.f, k.u)
+1.0
+```
+
+### Creating n valued logical systems
+
+```
 >>> from mvl.lukasiewicz import *
 >>> ls = LogicSystem(5, LukasiewiczLogicValue)
 >>> ls.values
@@ -192,6 +191,36 @@ True
 >>> bool(ls.values[3])
 False
 ```
+
+### Creating arbitrary logical values
+
+```
+>>> from mvl.lukasiewicz import *
+>>> x = LukasiewiczLogicValue(0.123)
+>>> x
+LukasiewiczLogicValue(0.123)
+>>> bool(x)
+False
+>>> s_and(x, 1)
+0.123
+```
+
+
+## License
+
+Unlicense. 
+
+
+## Documentation
+
+The sphinx documentation can be generated and opened as follows:
+
+1. Open a command line.
+1. Navigate to the «docs» directory.
+1. Run the command `make html`
+
+It can be read by opening the file `<project_path>/docs/build/html/index.html`.
+
 
 ## Links
 
