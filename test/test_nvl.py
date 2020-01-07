@@ -16,6 +16,10 @@ from mvl.lukasiewicz import (
     implies,
     equivalent,
 )
+import mvl.goedel as goedel
+import mvl.product as product
+import mvl.post as post
+
 
 class TestLogicValue(TestCase):
     class_ = LogicValue
@@ -34,7 +38,9 @@ class TestLogicValue(TestCase):
 
     def test_ne(self):
         instance = self.instance
-        self.assertNotEqual(instance, self.class_.from_frac(self.index, self.n_values))
+        self.assertNotEqual(instance, self.class_.from_frac(
+            self.index, self.n_values
+        ))
         self.assertNotEqual(instance, self.float_ + 1)
 
     def test_float(self):
@@ -92,6 +98,16 @@ class TestPriestLogicValue(TestLogicValue):
         self._test_bool(expected_truth_vals)
 
 
+class TestPostLukasiewiczLogicValue(TestLukasiewiczLogicValue):
+    class_ = post.PostLukasiewiczLogicValue
+    class_name = 'PostLukasiewiczLogicValue'
+
+
+class TestPostPriestLogicValue(TestPriestLogicValue):
+    class_ = post.PostPriestLogicValue
+    class_name = 'PostPriestLogicValue'
+
+
 class TestLogicSystem(TestCase):
     def setUp(self):
         self.n_values = 5
@@ -117,7 +133,9 @@ class TestLogicSystem(TestCase):
         self.assertEqual(n_values, len(logic_system.values))
 
 
-class TestOperators(TestCase):
+class OperatorsTestCase(TestCase):
+    __test__ = False
+
     def _test_binary_operator(self, op, inputs_to_output_map):
         for inputs, expected_output in inputs_to_output_map.items():
             a = inputs[0]
@@ -134,6 +152,10 @@ class TestOperators(TestCase):
             actual_output = op(a)
 
             self.assertAlmostEqual(expected_output, actual_output)
+
+
+class TestLukasiewiczOperators(OperatorsTestCase):
+    __test__ = True
 
     def test_s_and(self):
         inputs_to_output_map = {
@@ -242,6 +264,166 @@ class TestOperators(TestCase):
             (0.2, 0.2): 1,
         }
         self._test_binary_operator(equivalent, inputs_to_output_map)
+
+
+class TestGoedelOperators(OperatorsTestCase):
+    __test__ = True
+
+    def test_and_(self):
+        inputs_to_output_map = {
+                (0, 1): 0,
+                (1, 0): 0,
+                (1, 1): 1,
+                (0, 0): 0,
+              (0.5, 0): 0,
+              (0, 0.5): 0,
+              (0.5, 1): 0.5,
+              (1, 0.5): 0.5,
+            (0.5, 0.5): 0.5,
+            (0.2, 0.6): 0.2,
+            (0.2, 0.2): 0.2,
+        }
+        self._test_binary_operator(goedel.and_, inputs_to_output_map)
+
+    def test_or_(self):
+        inputs_to_output_map = {
+                (0, 1): 1,
+                (1, 0): 1,
+                (1, 1): 1,
+                (0, 0): 0,
+              (0.5, 0): 0.5,
+              (0, 0.5): 0.5,
+              (0.5, 1): 1,
+              (1, 0.5): 1,
+            (0.5, 0.5): 0.5,
+            (0.2, 0.6): 0.6,
+            (0.2, 0.2): 0.2,
+        }
+        self._test_binary_operator(goedel.or_, inputs_to_output_map)
+
+    def test_implies(self):
+        inputs_to_output_map = {
+                (0, 1): 1,
+                (1, 0): 0,
+                (1, 1): 1,
+                (0, 0): 1,
+              (0.5, 0): 0,
+              (0, 0.5): 1,
+              (0.5, 1): 1,
+              (1, 0.5): 0.5,
+            (0.5, 0.5): 1,
+            (0.2, 0.6): 1,
+            (0.6, 0.2): 0.2,
+            (0.2, 0.2): 1,
+        }
+        self._test_binary_operator(goedel.implies, inputs_to_output_map)
+
+    def test_not_(self):
+        inputs_to_output_map = {
+              0: 1,
+            0.2: 0,
+            0.4: 0,
+            0.5: 0,
+            0.6: 0,
+            0.8: 0,
+              1: 0,
+        }
+        self._test_unary_operator(goedel.not_, inputs_to_output_map)
+
+
+class TestProductOperators(OperatorsTestCase):
+    __test__ = True
+
+    def test_and_(self):
+        inputs_to_output_map = {
+                (0, 1): 0,
+                (1, 0): 0,
+                (1, 1): 1,
+                (0, 0): 0,
+              (0.5, 0): 0,
+              (0, 0.5): 0,
+              (0.5, 1): 0.5,
+              (1, 0.5): 0.5,
+            (0.5, 0.5): 0.5,
+            (0.2, 0.6): 0.2,
+            (0.6, 0.2): 0.6 * 1 / 3,
+            (0.2, 0.2): 0.2,
+        }
+        self._test_binary_operator(product.and_, inputs_to_output_map)
+
+    def test_mult(self):
+        inputs_to_output_map = {
+                (0, 1): 0,
+                (1, 0): 0,
+                (1, 1): 1,
+                (0, 0): 0,
+              (0.5, 0): 0,
+              (0, 0.5): 0,
+              (0.5, 1): 0.5,
+              (1, 0.5): 0.5,
+            (0.5, 0.5): 0.25,
+            (0.2, 0.6): 0.12,
+            (0.2, 0.2): 0.04,
+        }
+        self._test_binary_operator(product.mult, inputs_to_output_map)
+
+    def test_implies(self):
+        inputs_to_output_map = {
+                (0, 1): 1,
+                (1, 0): 0,
+                (1, 1): 1,
+                (0, 0): 1,
+              (0.5, 0): 0,
+              (0, 0.5): 1,
+              (0.5, 1): 1,
+              (1, 0.5): 0.5,
+            (0.5, 0.5): 1,
+            (0.2, 0.6): 1,
+            (0.6, 0.2): 1 / 3,
+            (0.2, 0.2): 1,
+        }
+        self._test_binary_operator(product.implies, inputs_to_output_map)
+
+    def test_not_(self):
+        inputs_to_output_map = {
+              0: 1,
+            0.2: 0,
+            0.4: 0,
+            0.5: 0,
+            0.6: 0,
+            0.8: 0,
+              1: 0,
+        }
+        self._test_unary_operator(product.not_, inputs_to_output_map)
+
+
+class TestPostOperators(OperatorsTestCase):
+    __test__ = True
+
+    def _test_not_(self, class_):
+        logic_system = LogicSystem(6, class_)
+        inputs_to_output_map = {
+            0: 1,
+            1: 0,
+            2: 0.2,
+            3: 0.4,
+            4: 0.6,
+            5: 0.8,
+        }
+
+        for index, expected_output in inputs_to_output_map.items():
+            input_ = logic_system.values[index]
+            print(float(input_))
+
+            actual = post.not_(input_)
+
+            self.assertAlmostEqual(expected_output, actual)
+
+    def test_priest_not(self):
+        self._test_not_(post.PostPriestLogicValue)
+
+    def test_lukasiewicz_not(self):
+        self._test_not_(post.PostLukasiewiczLogicValue)
 
 
 if __name__ == '__main__':

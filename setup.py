@@ -8,7 +8,7 @@ setuptools.setup(
     version = '0.1.0',
     author = 'Andrew J. Young',
     author_email = 'andrewjunyoung1@gmail.com',
-    description = 'A package which implements various systems of n valued' \
+    description = 'A package which implements various systems of n valued ' \
         'logic.',
     long_description = long_description,
     long_description_content_type = 'text/markdown',

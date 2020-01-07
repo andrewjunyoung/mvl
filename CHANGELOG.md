@@ -1,5 +1,15 @@
 # Changelog
 
+## [0.2.0] - 2020-01-07
+
+### Added
+- 3 more logical systems to work with:
+  - Post logics
+  - Priest logics
+  - Product logics
+- Updated documentations pages and a fully written readme file.
+- Fixed the formatting of setup to include a space
+
 ## [0.1.0] - 2020-01-03
 
 ### Added
