@@ -6,7 +6,7 @@ use more than 2, or infinite truth values, beyond «True» and «False».
 
 |                |       | 
 |----------------|-------|
-| Latest release | 0.2.0 |
+| Latest release | 0.1.0 |
 
 ## Table of contents
 
@@ -58,9 +58,8 @@ In 2 valued logic, this would always be false. But our apple is maybe red, but
 also maybe not red.
 
 3 valued logic has a solution to problems like this, where we have ranges of
-truth values between true and false. Say our answer to the first question is 50
-% yes, then our answer to the second question can be (maybe and maybe). So our
-final answer to the second question is «maybe».
+truth values between true and false. Say our answer to the first question is `maybe` then our answer to the second question can be `maybe and maybe`. So our
+final answer to the second question is `maybe`.
 
 In real life, SQL uses 3 valued logic to implement its logic. MVL provides an
 easy way to implement these sort of checks in python.
@@ -226,6 +225,6 @@ It can be read by opening the file `<project_path>/docs/build/html/index.html`.
 
 | Resource                                |           |
 |-----------------------------------------|-----------|
-| How do I know what logic system to use? |           |
-| Documentation                           |           |
+| How do I know what logic system to use? | Todo      |
+| Documentation                           | Todo      |
 
