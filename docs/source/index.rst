@@ -8,17 +8,17 @@ MVL documentation pages
 Lukasiewicz
 ===========
 
-Łukasiewicz is a many valued logic system. Originally defined by Jan Łukasiewicz
-(Polish: [ˈjan wukaˈɕɛvitʂ]) in the 20th century for 3 valued logic, Łukasiewicz
+Lukasiewicz is a many valued logic system. Originally defined by Jan Lukasiewicz
+(Polish: [ˈjan wukaˈɕɛvitʂ]) in the 20th century for 3 valued logic, Lukasiewicz
 later expanded his system to support arbitrary n valued logic and infinite
 valued logic.
 
-Łukasiewicz logics consists of values in the range [0, 1]. If the logic system is
+Lukasiewicz logics consists of values in the range [0, 1]. If the logic system is
 finite, then the set of values in the range [0, 1] is finite and are equal
 distances apart at n / (m - 1), where m is the total number of logic values, and
 n is the index.
 
-Łukasiewicz defines the following operators, given below alongside their MVL
+Lukasiewicz defines the following operators, given below alongside their MVL
 equivalents:
 
 - implication (implies, →)
@@ -31,8 +31,8 @@ equivalents:
 
 as well as propositional constants 0 and 1.
 
-Łukasiewicz logic defines the only value which is «true» to be 1, and so
-evaluating any other Łukasiewicz value as a python `bool` will evaluate to
+Lukasiewicz logic defines the only value which is «true» to be 1, and so
+evaluating any other Lukasiewicz value as a python `bool` will evaluate to
 `False`.
 
 
@@ -42,19 +42,19 @@ evaluating any other Łukasiewicz value as a python `bool` will evaluate to
 Goedel
 ======
 
-Gödel defined many valued logics in 1932 very similarly to Łukasiewicz, using
+Goedel defined many valued logics in 1932 very similarly to Lukasiewicz, using
 truth values in the range [0, 1] at positions n / (m - 1) for finite logic
 systems (where m is the total number of logic values, and n is the index), and
 across the continuous interval [0, 1] for infinite logic systems.
 
-Gödel logics provide only 4 logical operators:
+Goedel logics provide only 4 logical operators:
 
 - conjunction (and\_, &)
 - disjunction (or\_, \|)
 - implication (implies, →)
 - negation (not\_, !)
 
-Gödel logics are completely axiomatisable, meaning that one can define a logical
+Goedel logics are completely axiomatisable, meaning that one can define a logical
 calculus in which all tautologies are provable.
 
 
@@ -79,7 +79,7 @@ systems. It also defines 4 logical operators:
 Post logic
 ==========
 
-Post logics only work on finite valued systems. Like Łukasiewicz logics, they
+Post logics only work on finite valued systems. Like Lukasiewicz logics, they
 use logic values n / (m - 1) (where m is the total number of logic values, and n
 is the index) over the interval [0, 1].
 
@@ -159,7 +159,7 @@ This distinguishes it from kleene logic (see above).
 
 This module describes the various operators used by different 3 valued logic
 systems. There is lots of overlap between different systems of logic
-(particularly kleene and priest logic, and łukasiewicz logic). Logic systems
+(particularly kleene and priest logic, and lukasiewicz logic). Logic systems
 often define the same operators, sometimes under different names. In order to
 support reuse throughout the code base, this module was created as a common
 repository for logic operators used in various different 3 valued logic systems.
