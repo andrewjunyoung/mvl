@@ -6,7 +6,7 @@ use more than 2, or infinite truth values, beyond «True» and «False».
 
 |                |       | 
 |----------------|-------|
-| Latest release | 0.1.0 |
+| Latest release | 0.2.0 |
 
 ## Table of contents
 
@@ -148,7 +148,7 @@ The following 3 valued logic systems are supported by MVL:
 
 The following n valued logic systems are supported by MVL:
   - Łukasiewicz
-  - Gödel (under the name «goedel»
+  - Gödel (under the name «goedel»)
   - Product logic
   - Post logic
 
