@@ -32,7 +32,7 @@ equivalents:
 as well as propositional constants 0 and 1.
 
 Lukasiewicz logic defines the only value which is «true» to be 1, and so
-evaluating any other Lukasiewicz value as a python `bool` will evaluate to
+evaluating any other lukasiewicz value as a python `bool` will evaluate to
 `False`.
 
 
@@ -79,7 +79,7 @@ systems. It also defines 4 logical operators:
 Post logic
 ==========
 
-Post logics only work on finite valued systems. Like Lukasiewicz logics, they
+Post logics only work on finite valued systems. Like lukasiewicz logics, they
 use logic values n / (m - 1) (where m is the total number of logic values, and n
 is the index) over the interval [0, 1].
 
@@ -93,10 +93,11 @@ when creating LogicValues.
 
 Hence
 
-```
+``
 PostLukasiewiczLogicValue(1, 3)  # Will work.
+
 PostLukasiewiczLogicValue(1 / 3)  # Wont work (due to insufficient arguments).
-```
+``
 
 
 .. automodule:: mvl.post
