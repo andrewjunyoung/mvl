@@ -13,7 +13,7 @@ Lukasiewicz
 later expanded his system to support arbitrary n valued logic and infinite
 valued logic.
 
-Łukasiewicz logics consist of values in the range [0, 1]. If the logic system is
+Łukasiewicz logics consists of values in the range [0, 1]. If the logic system is
 finite, then the set of values in the range [0, 1] is finite and are equal
 distances apart at n / (m - 1), where m is the total number of logic values, and
 n is the index.
@@ -31,7 +31,7 @@ equivalents:
 
 as well as propositional constants 0 and 1.
 
-Łukasiewicz logics defines the only value which is «true» to be 1, and so
+Łukasiewicz logic defines the only value which is «true» to be 1, and so
 evaluating any other Łukasiewicz value as a python `bool` will evaluate to
 `False`.
 
@@ -102,23 +102,68 @@ PostLukasiewiczLogicValue(1 / 3)  # Wont work (due to insufficient arguments).
 .. automodule:: mvl.post
    :members:
 
-Bochvar
-=======
-.. automodule:: mvl.bochvar
-   :members:
 
 Kleene
 ======
+
+Kleene logic is a 3 valued logic system. It uses 3 logic values: «false»;
+«unknown»; and «true», abbreviated as «f», «u», and «t» respectively.
+
+Kleene logic uses lukasiewicz's definition of truth: the only truth value is 1
+(the logic value «true» (t)). This distinguishes it from priest logic (see
+below).
+
+
 .. automodule:: mvl.kleene
    :members:
 
+
+Bochvar
+=======
+
+Bochvar logic (also known as «kleene's weak 3 valued logic») is a 3 valued logic
+system. It uses 3 logic values: «false»; «unknown»; and «true», abbreviated as
+«f», «u», and «t» respectively.
+
+Like kleene logic, the only truth value in bochvar logic is 1.
+
+Bochvar logic uses different definitions of and\_; or\_; and implies, compared
+to normal kleene logic. These tables can be found below.
+
+In general, bochvar logic treats the unknwown value (u) as «contagious». The
+presence of u in any operator will cause the result to be u, regardless of any
+other variables in the expression.
+
+
+.. automodule:: mvl.bochvar
+   :members:
+
+
 Priest
 ======
+
+Priest logic is a 3 valued logic system. It uses 3 logic values: «false»;
+«unknown»; and «true», abbreviated as «f», «u», and «t» respectively.
+
+Priest logic does not lukasiewicz's definition of truth. Instead, it uses
+PriestLogicValues, where all non-zero truth values are said to be truth values.
+This distinguishes it from kleene logic (see above).
+
+
 .. automodule:: mvl.priest
    :members:
 
+
 3 valued logic operators
 ========================
+
+This module describes the various operators used by different 3 valued logic
+systems. There is lots of overlap between different systems of logic
+(particularly kleene and priest logic, and łukasiewicz logic). Logic systems
+often define the same operators, sometimes under different names. In order to
+support reuse throughout the code base, this module was created as a common
+repository for logic operators used in various different 3 valued logic systems.
+
 .. automodule:: mvl.tvl_operators
    :members:
 
