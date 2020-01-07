@@ -5,7 +5,7 @@ with open('README.md', 'r') as fh:
 
 setuptools.setup(
     name = 'mvl',
-    version = '0.1.0',
+    version = '0.2.0',
     author = 'Andrew J. Young',
     author_email = 'andrewjunyoung1@gmail.com',
     description = 'A package which implements various systems of n valued ' \
