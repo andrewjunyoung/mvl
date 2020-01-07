@@ -92,6 +92,7 @@ specific, and requires an index (: int) and a max_index (: int) to be passed in
 when creating LogicValues.
 
 Hence::
+
     PostLukasiewiczLogicValue(1, 3)  # Will work.
     PostLukasiewiczLogicValue(1 / 3)  # Wont work (due to insufficient arguments).
 
