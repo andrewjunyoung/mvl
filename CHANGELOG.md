@@ -7,8 +7,11 @@
   - Post logics
   - Priest logics
   - Product logics
-- Updated documentations pages and a fully written readme file.
-- Fixed the formatting of setup to include a space
+- Wrote an extensive readme file with lots of project information.
+- Added comments about usage to the doc pages.
+
+### Fixed
+- Formatting of setup to include a space.
 
 ## [0.1.0] - 2020-01-03
 
